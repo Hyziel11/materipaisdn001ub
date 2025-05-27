@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pendidikan Agama Islam</title>
+  
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    
+  background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+  background-repeat: repeat;
+}
+  .toolbar {
+    display: flex;
+    background-color: #00796b;
+    padding: 12px;
+    color: white;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .menu-item {
+    background-color: #004d40;
+    padding: 10px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .menu-item:hover {
+    background-color: #00332e;
+    transform: scale(1.05);
+  }
+  .sub-toolbar {
+    display: flex;
+    background-color: #009688;
+    padding: 10px;
+    color: white;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .sub-item {
+    background-color: #00695c;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .sub-item:hover {
+    background-color: #004d40;
+    transform: scale(1.05);
+  }
+  .content {
+    padding: 24px;
+  }
+  .bab-section {
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+  }
+  .bab-section h3 {
+    margin-top: 0;
+    color: #00695c;
+    border-bottom: 2px solid #e0f2f1;
+    padding-bottom: 6px;
+  }
+  .beranda {
+    text-align: center;
+  }
+  .beranda img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 12px;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  form input[type="text"] {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    width: 250px;
+  }
+  button {
+    background-color: #00796b;
+    color: white;
+    padding: 8px 16px;
+    margin: 10px 5px 0 0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #004d40;
+  }
+  ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+</style>
+
+</head>
+<body>
+
+  <div class="toolbar">
+    <div class="menu-item" onclick="tampilkanBeranda()">Beranda</div>
+    <div class="menu-item" onclick="tampilkanKelas(1)">Kelas 1</div>
+    <div class="menu-item" onclick="tampilkanKelas(2)">Kelas 2</div>
+    <div class="menu-item" onclick="tampilkanKelas(3)">Kelas 3</div>
+    <div class="menu-item" onclick="tampilkanKelas(4)">Kelas 4</div>
+    <div class="menu-item" onclick="tampilkanKelas(5)">Kelas 5</div>
+    <div class="menu-item" onclick="tampilkanKelas(6)">Kelas 6</div>
+  </div>
+
+  <div id="subToolbar" class="sub-toolbar" style="display: none;">
+    <div class="sub-item" onclick="tampilkanBab(1)">BAB 1</div>
+    <div class="sub-item" onclick="tampilkanBab(2)">BAB 2</div>
+    <div class="sub-item" onclick="tampilkanBab(3)">BAB 3</div>
+    <div class="sub-item" onclick="tampilkanBab(4)">BAB 4</div>
+    <div class="sub-item" onclick="tampilkanBab(5)">BAB 5</div>
+  </div>
+
+  <div class="content" id="konten">
+    <h2>Selamat datang di website Pendidikan Agama Islam</h2>
+    <p>Silakan pilih kelas dan bab untuk melihat materi dan tugas.</p>
+  </div>
+
+  <script>
+    const MAX_ULANGI = 2;
+    const ENDPOINT = "https://script.google.com/macros/s/AKfycbyVWySNGvCTuJknhPt4alcjzfSDo-Bo-Zpt12JUuPA_iBGh1l51cVOfDh7stsrSHaleJg/exec"; 
+
+    let kelasSaatIni = null;
+
+    function tampilkanBeranda() {
+      document.getElementById("subToolbar").style.display = "none";
+      document.getElementById("konten").innerHTML = `
+        <div class="beranda">
+          <h2>Selamat datang di Pendidikan Agama Islam</h2>
+          <img src="ayo ngaji.jpg" alt="Ilustrasi anak-anak ngaji" />
+          <p><strong>Pemberitahuan:</strong></p>
+          <ul style="text-align: left; display: inline-block;">
+            <li>Website ini berisi materi Pendidikan Agama Islam untuk siswa SD.</li>
+            <li>Silakan pilih kelas dan bab sesuai kebutuhan.</li>
+            <li>Setiap bab memiliki materi dan soal pilihan ganda.</li>
+            <li>Siswa hanya dapat mengerjakan maksimal 2 kali.</li>
+            <li>Skor akan dikirim otomatis ke guru.</li>
+            <li>Diberitahukan bahwa untuk Kelas 2A, tugas BAB 1 harap dikumpulkan sebelum tanggal 12 Agustus 2025.</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    function tampilkanKelas(kelas) {
+      kelasSaatIni = kelas;
+      document.getElementById("subToolbar").style.display = "flex";
+      document.getElementById("konten").innerHTML = `<h2>Pilih BAB untuk Kelas ${kelas}</h2>`;
+    }
+
+    function tampilkanBab(bab) {
+      if (kelasSaatIni === 2 && bab === 1) {
+        document.getElementById("konten").innerHTML = `
+          <h2>Kelas 2 - BAB 1: Surah an-Nas</h2>
+          <audio controls>
+            <source src="https://server8.mp3quran.net/afs/114.mp3" type="audio/mpeg">
+            Browser Anda tidak mendukung pemutar audio.
+          </audio>
+          <div class="bab-section">
+            <h3>Materi</h3>
+            <p>Surah an-Nas adalah surah ke-114 dalam Al-Qur’an dan merupakan surah terakhir...</p>
+            <ul>
+              <li><strong>Manusia adalah makhluk lemah</strong></li>
+              <li><strong>Perlindungan hanya kepada Allah Swt.</strong></li>
+              <li><strong>Perlindungan dari godaan setan</strong></li>
+              <li><strong>Allah Maha Pelindung</strong></li>
+              <li><strong>Dibaca setiap hari</strong></li>
+            </ul>
+          </div>
+          <div class="bab-section">
+            <h3>Tugas Pilihan Ganda</h3>
+            <form id="quizForm">
+              <label>Nama: <input type="text" id="namaSiswa" required></label><br><br>
+              <label>Kelas: <input type="text" id="kelasSiswa" required></label><br><br>
+              <ol>
+                ${generateSoal()}
+              </ol>
+              <button type="button" onclick="cekJawaban()">Periksa Jawaban</button>
+              <button type="button" onclick="ulangiKuis()">Ulangi Kuis</button>
+            </form>
+            <div id="skor"></div>
+          </div>
+        `;
+
+        // Kunci soal jika sudah melebihi batas
+        const percobaan = parseInt(localStorage.getItem("percobaanKuisKelas2Bab1") || "0");
+        if (percobaan >= MAX_ULANGI) {
+          kunciSoal();
+        }
+      } else {
+        document.getElementById("konten").innerHTML = `
+          <h2>Kelas ${kelasSaatIni} - BAB ${bab}</h2>
+          <div class="bab-section"><p>Materi belum tersedia.</p></div>
+        `;
+      }
+    }
+
+    function generateSoal() {
+      const soal = [
+        { t: "Surah an-Nas adalah surah ke-", o: ["112", "113", "114", "115"], j: "114" },
+        { t: "Surah an-Nas tergolong surah apa?", o: ["Makkiyah", "Madaniyah", "Yasiniyah", "Quraniyah"], j: "Madaniyah" },
+        { t: "Apa arti kata 'an-Nas'?", o: ["Manusia", "Perlindungan", "Setan", "Tuhan"], j: "Manusia" },
+        { t: "Surah an-Nas diturunkan setelah peristiwa apa?", o: ["Isra Miraj", "Hijrah", "Perang Badar", "Lailatul Qadar"], j: "Hijrah" },
+        { t: "Surah an-Nas terdiri dari berapa ayat?", o: ["4", "5", "6", "7"], j: "6" },
+        { t: "Manusia harus memohon perlindungan kepada siapa?", o: ["Malaikat", "Nabi", "Allah Swt.", "Orang tua"], j: "Allah Swt." },
+        { t: "Setan menggoda manusia secara...", o: ["Terang-terangan", "Langsung", "Sembunyi-sembunyi", "Terbuka"], j: "Sembunyi-sembunyi" },
+        { t: "Kapan waktu yang baik membaca Surah an-Nas?", o: ["Pagi", "Malam", "Sebelum tidur", "Saat makan"], j: "Sebelum tidur" },
+        { t: "Siapa Tuhan yang Maha Pelindung?", o: ["Nabi", "Manusia", "Allah Swt.", "Setan"], j: "Allah Swt." },
+        { t: "Apa manfaat membaca Surah an-Nas?", o: ["Menambah pahala", "Melindungi dari godaan", "Mengusir setan", "Semua benar"], j: "Semua benar" }
+      ];
+
+      return soal.map((s, i) => `
+        <li>${s.t}<br>
+          ${s.o.map(j =>
+            `<label><input type="radio" name="kelas2bab1_q${i+1}" value="${j === s.j ? 'benar' : 'salah'}"> ${j}</label><br>`
+          ).join('')}
+        </li>
+      `).join('');
+    }
+
+    function cekJawaban() {
+      const nama = document.getElementById("namaSiswa").value.trim();
+      const kelas = document.getElementById("kelasSiswa").value.trim();
+
+      if (!nama || !kelas) {
+        alert("Silakan isi nama dan kelas terlebih dahulu.");
+        return;
+      }
+
+      let benar = 0;
+      for (let i = 1; i <= 10; i++) {
+        const jawaban = document.querySelector(`input[name="kelas2bab1_q${i}"]:checked`);
+        if (jawaban && jawaban.value === "benar") benar++;
+      }
+
+      const skor = Math.round((benar / 10) * 100);
+      let percobaan = parseInt(localStorage.getItem("percobaanKuisKelas2Bab1") || "0") + 1;
+      localStorage.setItem("percobaanKuisKelas2Bab1", percobaan);
+
+      const hasil = { nama, kelas, skor, percobaan };
+      localStorage.setItem('hasilKuisKelas2Bab1', JSON.stringify(hasil));
+
+      document.getElementById("skor").innerHTML = `
+        <p><strong>Nama:</strong> ${nama}</p>
+        <p><strong>Kelas:</strong> ${kelas}</p>
+        <p><strong>Skor Anda:</strong> ${skor}</p>
+        <p><strong>Kesempatan mengerjakan:</strong> ${percobaan} dari ${MAX_ULANGI}</p>
+      `;
+
+      if (percobaan >= MAX_ULANGI) {
+        kunciSoal();
+      }
+
+      fetch(ENDPOINT, {
+        method: "POST",
+        body: JSON.stringify(hasil),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then(res => res.text())
+        .then(res => console.log("Terkirim:", res))
+        .catch(err => console.error("Gagal kirim:", err));
+    }
+
+    function ulangiKuis() {
+      let percobaan = parseInt(localStorage.getItem("percobaanKuisKelas2Bab1") || "0");
+      if (percobaan >= MAX_ULANGI) {
+        alert("Anda telah mencapai batas maksimal percobaan.");
+        kunciSoal();
+        return;
+      }
+
+      for (let i = 1; i <= 10; i++) {
+        const opsi = document.getElementsByName(`kelas2bab1_q${i}`);
+        opsi.forEach(opt => opt.checked = false);
+      }
+
+      document.getElementById("skor").innerHTML = "";
+    }
+
+    function kunciSoal() {
+      for (let i = 1; i <= 10; i++) {
+        const opsi = document.getElementsByName(`q${i}`);
+        opsi.forEach(opt => opt.disabled = true);
+      }
+    }
+
+    window.onload = tampilkanBeranda;
+  
+function tampilkanBab(bab) {
+  if (kelasSaatIni === 2 && bab === 1) {
+    // existing BAB 1 logic remains unchanged
+    // this part should already exist and stay intact
+  } else if (kelasSaatIni === 2 && bab === 2) {
+    document.getElementById("konten").innerHTML = `
+      <h2>Kelas 2 - BAB 2: Asmaul Husna</h2>
+      <div class="bab-section">
+        <h3>Materi</h3>
+        <p><strong>1. Ar-Rahman – Maha Pengasih</strong></p>
+        <p>Ar-Rahman berarti Allah Maha Pengasih. Allah mencurahkan kasih sayang kepada semua makhluk-Nya tanpa membedakan.</p>
+        <p><strong>Bukti:</strong> Semua makhluk diberikan rezeki oleh Allah, baik yang taat maupun yang tidak.</p>
+        <p><strong>Meneladani:</strong> Bersikap pengasih kepada semua makhluk.</p>
+
+        <p><strong>2. Ar-Rahim – Maha Penyayang</strong></p>
+        <p>Allah memberikan kasih sayang istimewa kepada orang-orang beriman dan taat.</p>
+        <p><strong>Bukti:</strong> Allah menjanjikan surga bagi hamba-Nya yang bertakwa.</p>
+        <p><strong>Meneladani:</strong> Menunjukkan kasih sayang kepada keluarga dan teman.</p>
+
+        <p><strong>3. Al-Ghaffar – Maha Pengampun</strong></p>
+        <p>Allah selalu membuka pintu ampunan bagi yang bertobat dengan sungguh-sungguh.</p>
+        <p><strong>Bukti:</strong> Allah menerima tobat Nabi Adam a.s.</p>
+        <p><strong>Meneladani:</strong> Meminta maaf dan memaafkan teman.</p>
+
+        <p><strong>4. Al-‘Alim – Maha Mengetahui</strong></p>
+        <p>Allah Maha Mengetahui segala sesuatu, baik yang tampak maupun tersembunyi.</p>
+        <p><strong>Bukti:</strong> Allah tahu isi hati dan niat manusia.</p>
+        <p><strong>Meneladani:</strong> Selalu berbuat baik meskipun tidak ada yang melihat.</p>
+
+        <p><strong>5. As-Sami’ – Maha Mendengar</strong></p>
+        <p>Allah mendengar segala sesuatu, bahkan doa yang paling pelan sekalipun.</p>
+        <p><strong>Bukti:</strong> Allah mengabulkan doa Nabi Zakaria.</p>
+        <p><strong>Meneladani:</strong> Menjadi pendengar yang baik.</p>
+      </div>
+
+      <div class="bab-section">
+        <h3>Tugas Pilihan Ganda</h3>
+        <form id="quizForm">
+          <label>Nama: <input type="text" id="namaSiswa" required></label><br><br>
+          <label>Kelas: <input type="text" id="kelasSiswa" required></label><br><br>
+          <ol>
+            ${generateSoalAsmaulHusna()}
+          </ol>
+          <button type="button" onclick="cekJawaban()">Periksa Jawaban</button>
+          <button type="button" onclick="ulangiKuis()">Ulangi Kuis</button>
+        </form>
+        <div id="skor"></div>
+      </div>
+    `;
+  } else {
+    document.getElementById("konten").innerHTML = `
+      <h2>Kelas ${kelasSaatIni} - BAB ${bab}</h2>
+      <div class="bab-section"><p>Materi belum tersedia.</p></div>
+    `;
+  }
+}
+
+function generateSoalAsmaulHusna() {
+  const soal = [
+    { t: "Apa arti dari Asmaul Husna 'Ar-Rahman'?", o: ["Maha Penyayang", "Maha Pengampun", "Maha Pengasih", "Maha Mengetahui"], j: "Maha Pengasih" },
+    { t: "Apa arti dari Asmaul Husna 'Ar-Rahim'?", o: ["Maha Pengasih", "Maha Penyayang", "Maha Mendengar", "Maha Pengampun"], j: "Maha Penyayang" },
+    { t: "Apa arti dari Asmaul Husna 'Al-Ghaffar'?", o: ["Maha Mengetahui", "Maha Mendengar", "Maha Pengampun", "Maha Penyayang"], j: "Maha Pengampun" },
+    { t: "Apa arti dari Asmaul Husna 'Al-‘Alim'?", o: ["Maha Mengetahui", "Maha Mendengar", "Maha Penyayang", "Maha Pengampun"], j: "Maha Mengetahui" },
+    { t: "Apa arti dari Asmaul Husna 'As-Sami’'?" , o: ["Maha Mendengar", "Maha Pengampun", "Maha Pengasih", "Maha Mengetahui"], j: "Maha Mendengar" },
+    { t: "Siapakah yang diberi rezeki oleh Allah tanpa membedakan?", o: ["Orang kaya saja", "Semua makhluk", "Orang Islam saja", "Manusia saja"], j: "Semua makhluk" },
+    { t: "Allah memberikan kasih sayang istimewa kepada siapa?", o: ["Orang yang kaya", "Orang kafir", "Orang beriman", "Semua orang"], j: "Orang beriman" },
+    { t: "Apa contoh meneladani sifat Ar-Rahman?", o: ["Menyayangi teman dan binatang", "Berbohong", "Memarahi orang lain", "Mencuri"], j: "Menyayangi teman dan binatang" },
+    { t: "Bagaimana kita meneladani sifat Ar-Rahim?", o: ["Menghina orang lain", "Mendoakan orang tua", "Bersikap sombong", "Tidak peduli teman"], j: "Mendoakan orang tua" },
+    { t: "Apa bukti bahwa Allah Maha Pengampun?", o: ["Menurunkan hujan", "Menciptakan langit", "Menerima tobat Nabi Adam", "Mengabulkan doa"], j: "Menerima tobat Nabi Adam" },
+    { t: "Apa yang harus dilakukan jika kita berbuat salah?", o: ["Berlari", "Memaafkan orang lain", "Meminta maaf", "Melupakan"], j: "Meminta maaf" },
+    { t: "Apa contoh dari sifat Al-‘Alim?", o: ["Allah tahu isi hati kita", "Allah menciptakan hewan", "Allah memberi rezeki", "Allah memberi penyakit"], j: "Allah tahu isi hati kita" },
+    { t: "Bagaimana kita meneladani Al-‘Alim?", o: ["Berbuat baik saat dilihat orang saja", "Selalu berbuat baik", "Tidak belajar", "Menghina orang"], j: "Selalu berbuat baik" },
+    { t: "Apa bukti bahwa Allah Maha Mendengar?", o: ["Mengabulkan doa Nabi Zakaria", "Membelah laut", "Menurunkan hujan", "Menurunkan kitab"], j: "Mengabulkan doa Nabi Zakaria" },
+    { t: "Apa contoh meneladani As-Sami’?", o: ["Mendengarkan nasihat guru", "Berbicara saat guru bicara", "Tidak mendengarkan", "Tidur di kelas"], j: "Mendengarkan nasihat guru" },
+    { t: "Apa yang dilakukan Allah kepada orang bertakwa?", o: ["Mengazab mereka", "Memberi surga", "Melupakan mereka", "Mengabaikan mereka"], j: "Memberi surga" },
+    { t: "Mengapa kita harus memaafkan teman?", o: ["Agar dibalas", "Agar dimusuhi", "Meneladani Al-Ghaffar", "Agar sombong"], j: "Meneladani Al-Ghaffar" },
+    { t: "Allah tahu apa yang kita...", o: ["Lakukan dan pikirkan", "Tulis", "Ucapkan saja", "Bicarakan"], j: "Lakukan dan pikirkan" },
+    { t: "Mengapa kita harus menjadi pendengar yang baik?", o: ["Agar disukai Allah", "Agar dimarahi", "Agar kaya", "Agar malas"], j: "Agar disukai Allah" },
+    { t: "Bagaimana sikap kita kepada semua makhluk?", o: ["Sombong", "Benci", "Pengasih", "Iri"], j: "Pengasih" }
+  ];
+  return soal.map((s, i) => `
+    <li>${s.t}<br>
+      ${s.o.map(j =>
+        `<label><input type="radio" name="kelas2bab2_q${i+1}" value="${j === s.j ? 'benar' : 'salah'}"> ${j}</label><br>`
+      ).join('')}
+    </li>
+  `).join('');
+}
+ function cekJawaban() {
+      const nama = document.getElementById("namaSiswa").value.trim();
+      const kelas = document.getElementById("kelasSiswa").value.trim();
+
+      if (!nama || !kelas) {
+        alert("Silakan isi nama dan kelas terlebih dahulu.");
+        return;
+      }
+
+      let benar = 0;
+      for (let i = 1; i <= 10; i++) {
+        const jawaban = document.querySelector(`input[name="kelas2bab2_q${i}"]:checked`);
+        if (jawaban && jawaban.value === "benar") benar++;
+      }
+
+      const skor = Math.round((benar / 10) * 100);
+      let percobaan = parseInt(localStorage.getItem("percobaanKuisKelas2Bab2") || "0") + 1;
+      localStorage.setItem("percobaanKuisKelas2Bab2", percobaan);
+
+      const hasil = { nama, kelas, skor, percobaan };
+      localStorage.setItem('hasilKuisKelas2Bab2', JSON.stringify(hasil));
+
+      document.getElementById("skor").innerHTML = `
+        <p><strong>Nama:</strong> ${nama}</p>
+        <p><strong>Kelas:</strong> ${kelas}</p>
+        <p><strong>Skor Anda:</strong> ${skor}</p>
+        <p><strong>Kesempatan mengerjakan:</strong> ${percobaan} dari ${MAX_ULANGI}</p>
+      `;
+
+      if (percobaan >= MAX_ULANGI) {
+        kunciSoal();
+      }
+
+      fetch(ENDPOINT, {
+        method: "POST",
+        body: JSON.stringify(hasil),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then(res => res.text())
+        .then(res => console.log("Terkirim:", res))
+        .catch(err => console.error("Gagal kirim:", err));
+    }
+
+    function ulangiKuis() {
+      let percobaan = parseInt(localStorage.getItem("percobaanKuisKelas2Bab2") || "0");
+      if (percobaan >= MAX_ULANGI) {
+        alert("Anda telah mencapai batas maksimal percobaan.");
+        kunciSoal();
+        return;
+      }
+
+      for (let i = 1; i <= 10; i++) {
+        const opsi = document.getElementsByName(`kelas2bab2_q${i}`);
+        opsi.forEach(opt => opt.checked = false);
+      }
+
+      document.getElementById("skor").innerHTML = "";
+    }
+
+    function kunciSoal() {
+      for (let i = 1; i <= 10; i++) {
+        const opsi = document.getElementsByName(`kelas2bab2_q${i}`);
+        opsi.forEach(opt => opt.disabled = true);
+      }
+    }
+
+    window.onload = tampilkanBeranda;
+
+function tampilkanBab(bab) {
+  if (kelasSaatIni === 2 && bab === 1) {
+    document.getElementById("konten").innerHTML = `
+      <h2>Kelas 2 - BAB 1: Surah an-Nas</h2>
+      <audio controls>
+        <source src="https://server8.mp3quran.net/afs/114.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung pemutar audio.
+      </audio>
+      <div class="bab-section">
+        <h3>Materi</h3>
+        <p>Surah an-Nas adalah surah ke-114 dalam Al-Qur’an dan merupakan surah terakhir...</p>
+        <ul>
+          <li><strong>Manusia adalah makhluk lemah</strong></li>
+          <li><strong>Perlindungan hanya kepada Allah Swt.</strong></li>
+          <li><strong>Perlindungan dari godaan setan</strong></li>
+          <li><strong>Allah Maha Pelindung</strong></li>
+          <li><strong>Dibaca setiap hari</strong></li>
+        </ul>
+      </div>
+      <div class="bab-section">
+        <h3>Tugas Pilihan Ganda</h3>
+        <form id="quizForm">
+          <label>Nama: <input type="text" id="namaSiswa" required></label><br><br>
+          <label>Kelas: <input type="text" id="kelasSiswa" required></label><br><br>
+          <ol>
+            ${generateSoal()}
+          </ol>
+          <button type="button" onclick="cekJawaban()">Periksa Jawaban</button>
+          <button type="button" onclick="ulangiKuis()">Ulangi Kuis</button>
+        </form>
+        <div id="skor"></div>
+      </div>
+    `;
+    const percobaan = parseInt(localStorage.getItem("percobaanKuisKelas2Bab1") || "0");
+    if (percobaan >= MAX_ULANGI) {
+      kunciSoal();
+    }
+  } else if (kelasSaatIni === 2 && bab === 2) {
+    document.getElementById("konten").innerHTML = `
+      <h2>Kelas 2 - BAB 2: Asmaul Husna</h2>
+      <div class="bab-section">
+        <h3>Materi</h3>
+        <p><strong>1. Ar-Rahman – Maha Pengasih</strong></p>
+        <p>Ar-Rahman berarti Allah Maha Pengasih. Allah mencurahkan kasih sayang kepada semua makhluk-Nya tanpa membedakan.</p>
+        <p><strong>Bukti:</strong> Semua makhluk diberikan rezeki oleh Allah, baik yang taat maupun yang tidak.</p>
+        <p><strong>Meneladani:</strong> Bersikap pengasih kepada semua makhluk.</p>
+
+        <p><strong>2. Ar-Rahim – Maha Penyayang</strong></p>
+        <p>Allah memberikan kasih sayang istimewa kepada orang-orang beriman dan taat.</p>
+        <p><strong>Bukti:</strong> Allah menjanjikan surga bagi hamba-Nya yang bertakwa.</p>
+        <p><strong>Meneladani:</strong> Menunjukkan kasih sayang kepada keluarga dan teman.</p>
+
+        <p><strong>3. Al-Ghaffar – Maha Pengampun</strong></p>
+        <p>Allah selalu membuka pintu ampunan bagi yang bertobat dengan sungguh-sungguh.</p>
+        <p><strong>Bukti:</strong> Allah menerima tobat Nabi Adam a.s.</p>
+        <p><strong>Meneladani:</strong> Meminta maaf dan memaafkan teman.</p>
+
+        <p><strong>4. Al-‘Alim – Maha Mengetahui</strong></p>
+        <p>Allah Maha Mengetahui segala sesuatu, baik yang tampak maupun tersembunyi.</p>
+        <p><strong>Bukti:</strong> Allah tahu isi hati dan niat manusia.</p>
+        <p><strong>Meneladani:</strong> Selalu berbuat baik meskipun tidak ada yang melihat.</p>
+
+        <p><strong>5. As-Sami’ – Maha Mendengar</strong></p>
+        <p>Allah mendengar segala sesuatu, bahkan doa yang paling pelan sekalipun.</p>
+        <p><strong>Bukti:</strong> Allah mengabulkan doa Nabi Zakaria.</p>
+        <p><strong>Meneladani:</strong> Menjadi pendengar yang baik.</p>
+      </div>
+
+      <div class="bab-section">
+        <h3>Tugas Pilihan Ganda</h3>
+        <form id="quizForm">
+          <label>Nama: <input type="text" id="namaSiswa" required></label><br><br>
+          <label>Kelas: <input type="text" id="kelasSiswa" required></label><br><br>
+          <ol>
+            ${generateSoalAsmaulHusna()}
+          </ol>
+          <button type="button" onclick="cekJawaban()">Periksa Jawaban</button>
+          <button type="button" onclick="ulangiKuis()">Ulangi Kuis</button>
+        </form>
+        <div id="skor"></div>
+      </div>
+    `;
+  } else {
+    document.getElementById("konten").innerHTML = `
+      <h2>Kelas ${kelasSaatIni} - BAB ${bab}</h2>
+      <div class="bab-section"><p>Materi belum tersedia.</p></div>
+    `;
+  }
+}
+
+</script>
+</body>
+</html>
